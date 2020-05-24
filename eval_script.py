@@ -5,6 +5,7 @@ from __future__ import print_function
 import tensorflow as tf
 import data_process
 import numpy as np
+from matplotlib import pyplot as plt
 
 
 print(tf.test.is_gpu_available())
@@ -27,7 +28,7 @@ tf.app.flags.DEFINE_string('network',  'affwildnet_vggface' , ' which network ar
 tf.app.flags.DEFINE_string('input_file',  '/homes/input.csv' , 'the input file : it should be in the format: image_file_location,valence_value,arousal_value  and images should be jpgs'     )                           
 
 
-tf.app.flags.DEFINE_string('pretrained_model_checkpoint_path', './affwildnet_vggface/affwildnet-vggface-gru/vggface_rnn',
+tf.app.flags.DEFINE_string('pretrained_model_checkpoint_path', '/home/cnrg-ntu/Documents/r07942146/Aff-Wild-models/weights/affwildnet-vggface-gru/vggface_rnn/model.ckpt-0',
                            '''the pretrained model checkpoint path to restore,if there exists one  '''
                            '''''')
 
@@ -158,9 +159,11 @@ def evaluate():
         print('MSE Arousal : {}'.format(mse_arousal))
         mse_valence = sum((predictions[:,0] - labels[:,0])**2)/len(labels[:,0])
         print('MSE Valence : {}'.format(mse_valence))
-    
-
-  
+        print(images)
+        plt.figure()
+        plt.plot(predictions[:, 0])
+        plt.plot(labels[:, 0])
+        plt.savefig('out.png')
     
 
     return conc_valence, conc_arousal, (conc_arousal+conc_valence)/2, mse_arousal, mse_valence
